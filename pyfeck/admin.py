@@ -65,12 +65,16 @@ class CharacterRelationship_Inline(admin.TabularInline):
     extra = 1
     fk_name = "supportingCharacter"
 
+##class GenerationInline(admin.TabularInline):
+    ##model = generation
+    ##extra = 1
+
 class CharacterClassAdmin(admin.ModelAdmin):
     fieldsets = [("Generic", {"fields" : ["category", "tier"]})]
     inlines = [CharacterClassStat_Inline, CharacterClassCompoundStat_Inline, CharacterClassWeapon_Inline, CharacterClassPromotion_Inline, CharacterClassSkill_Inline]
 
 class CharacterAdmin(admin.ModelAdmin):
-    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClassCategory", "secondaryClassCategory"]})]
+    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClassCategory", "secondaryClassCategory", "generation"]})]
     inlines = [CharacterStat_Inline, CharacterWeaponRank_Inline, CharacterSupportLevelStatBonus_Inline, CharacterRelationship_Inline]
 
 class SupportLevelAvailability_Inline(admin.TabularInline):

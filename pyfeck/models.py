@@ -115,6 +115,8 @@ class Character(models.Model):
     primaryClassCategory = models.ForeignKey(CharacterClassCategory, on_delete = models.CASCADE, related_name = "primary_Class_Category")
     secondaryClassCategory = models.ForeignKey(CharacterClassCategory, on_delete = models.CASCADE, related_name = "secondary_Class_Category")
     isCurrentClassPrimary = models.BooleanField()
+    generationChoices = ((1, "Generation One"), (2, "Generation Two"), (3, "Generation Three"))
+    generation = models.IntegerField(choices = generationChoices, default = 1)
 
 class CharacterSupportLevelStatBonus(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
@@ -142,8 +144,6 @@ class CharacterStat(models.Model):
     cap_modifier = models.IntegerField()
 
 # TODO: Add character friendship classes, marriage classes
-# TODO: Add child characters and make Gen 2 concept
-# TODO: Add formula for child growths and stat cap modifiers and also bases
+# TODO: Add formula for child growths and stat cap modifiers and also bases and class sets from parents
 # TODO: Add Kamui talent
 # TODO: Add boon and bane
-# TODO: Add generational tags as well as 3rd gen malarkey
