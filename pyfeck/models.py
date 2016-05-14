@@ -117,6 +117,7 @@ class Character(models.Model):
     isCurrentClassPrimary = models.BooleanField()
     generationChoices = ((1, "Generation One"), (2, "Generation Two"), (3, "Generation Three"))
     generation = models.IntegerField(choices = generationChoices, default = 1)
+    characterImage = models.CharField(max_length = 256)
 
 class CharacterSupportLevelStatBonus(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)

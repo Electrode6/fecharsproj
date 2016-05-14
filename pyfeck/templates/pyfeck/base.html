@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{%static 'pyfeck/css/style.css'%}"/>
+    <title>{% block headTitle %}{% endblock %}</title>
+</head>
+<body>
+{% static 'pyfeck/images/characters/' as imageStaticPath %}
+{% block content %}
+
+{% endblock %}
+</body>
+</html>

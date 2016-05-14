@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{output}}</title>
-    {%load staticfiles%}
-    <link rel="stylesheet" type="text/css" href="{%static 'pyfeck/css/style.css'%}"/>
-</head>
-<body>
-<h1>
-{{output}}
-</h1>
-</body>
-</html>
+{% extends 'pyfeck/base.html' %}
+{% block headTitle %}
+All Characters
+{% endblock %}
+{% block content%}
+{% if allCharacters %}
+<ul>
+    {% for character in allCharacters %}
+    <li>
+        <img src="{{imageStaticPath}}{{character.characterImage}}" alt="{{character.name}}"/>
+        <a href="{% url 'pyfeck:character' character.id %}">{{character.name}}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+I have no characters to display
+{% endif %}
+{% endblock %}
