@@ -1,0 +1,50 @@
+{% extends "pyfeck/base.html" %}
+
+{% block head_title %}
+{{ character.name}}
+{% endblock %}
+
+{% block content %}
+{% load verbose_names %}
+<div class="panel panel-default">
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-md-3">
+<img src="{{image_static_path}}{{character.image_static}}" class="img-responsive" alt="{{character.name}}"/>
+<h1>{{ character.name}} <small>{{character.get_generation_display}}</small></h1>
+            </div>
+        <div class="col-md-3">
+            <p>{% get_verbose_field_name character 'baseLevel' %} <span class="badge">{{character.baseLevel}}</span></p>
+            <p>
+
+    {% get_verbose_field_name character 'primaryClassCategory' %}:{{character.primaryClassCategory.name}}
+    {% ifequal character.isCurrentClassPrimary 1 %}
+        <span class="label label-default">Current</span>
+    {% endifequal %}
+</p>
+
+<p>
+{% get_verbose_field_name character 'secondaryClassCategory' %}:{{character.secondaryClassCategory.name}}
+    {% ifequal character.isCurrentClassPrimary 0 %}
+        <span class="label label-default">Current</span>
+    {% endifequal %}
+</p>
+<p>{{character.gender.name}}</p>
+<p><strong>{% get_verbose_field_name character 'skillName' %}:{{character.skillName}}</strong> &nbsp; {{character.skillDescription}}</p>
+
+
+        </div>
+</div>
+</div>
+{% if character.characterWeapons %}
+    <ul>
+    {% for characterWeapon in character.characterWeapons %}
+        <li>{{characterWeapon.weapon.name}} {% get_verbose_field_name characterWeapon.weapon 'rank'%} {{characterWeapon.weapon.rank}} {% get_verbose_field_name characterWeapon 'base_weapon_rank'%}: {{characterWeapon.base_weapon_rank.name}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Weaponless character.</p>
+{% endif %}
+
+</div>
+{% endblock %}

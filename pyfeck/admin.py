@@ -74,7 +74,7 @@ class CharacterClassAdmin(admin.ModelAdmin):
     inlines = [CharacterClassStat_Inline, CharacterClassCompoundStat_Inline, CharacterClassWeapon_Inline, CharacterClassPromotion_Inline, CharacterClassSkill_Inline]
 
 class CharacterAdmin(admin.ModelAdmin):
-    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClassCategory", "secondaryClassCategory", "generation"]})]
+    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClassCategory", "secondaryClassCategory", "isCurrentClassPrimary","generation"]})]
     inlines = [CharacterStat_Inline, CharacterWeaponRank_Inline, CharacterSupportLevelStatBonus_Inline, CharacterRelationship_Inline]
 
 class SupportLevelAvailability_Inline(admin.TabularInline):

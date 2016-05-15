@@ -16,12 +16,12 @@ class WeaponRank(models.Model):
 
 class Weapon(models.Model):
     name = models.CharField(max_length = 20)
-    rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE)
+    rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE, verbose_name="weapon rank")
     def __str__(self):
         return self.name
 
 class CharacterClassCategory(models.Model):
-    name = models.CharField(max_length = 20)
+    name = models.CharField(verbose_name="class name", max_length = 20)
     class Meta:
         verbose_name = "Character Class Category"
         verbose_name_plural = "Character Class Categories"
@@ -98,7 +98,7 @@ class SupportLevel(models.Model):
         return self.name
 
 class SexCategory(models.Model):
-    name = models.CharField(max_length = 10)
+    name = models.CharField(verbose_name="sex",max_length = 10)
     class Meta:
         verbose_name = "Sex Category"
         verbose_name_plural = "Sex Categories"
@@ -108,15 +108,21 @@ class SexCategory(models.Model):
 class Character(models.Model):
     name = models.CharField(max_length = 20)
     gender = models.ForeignKey(SexCategory, on_delete = models.CASCADE)
-    baseLevel = models.IntegerField()
-    skillName = models.CharField(max_length = 50)
+    baseLevel = models.IntegerField(verbose_name='base level')
+    skillName = models.CharField(verbose_name="skill", max_length = 50)
     skillDescription = models.CharField(max_length = 500)
     currentClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
-    primaryClassCategory = models.ForeignKey(CharacterClassCategory, on_delete = models.CASCADE, related_name = "primary_Class_Category")
-    secondaryClassCategory = models.ForeignKey(CharacterClassCategory, on_delete = models.CASCADE, related_name = "secondary_Class_Category")
+    primaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="primary class", on_delete = models.CASCADE, related_name = "primary_Class_Category")
+    secondaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="secondary class",on_delete = models.CASCADE, related_name = "secondary_Class_Category")
     isCurrentClassPrimary = models.BooleanField()
     generationChoices = ((1, "Generation One"), (2, "Generation Two"), (3, "Generation Three"))
-    generation = models.IntegerField(choices = generationChoices, default = 1)
+    generation = models.IntegerField(verbose_name="generation", choices = generationChoices, default = 1)
+    image_static = models.CharField(max_length=255)
+
+    @property
+    def characterWeapons(self):
+        return CharacterWeaponRank.objects.filter(character_id=self.pk)
+
 
 class CharacterSupportLevelStatBonus(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
@@ -133,7 +139,7 @@ class CharacterRelationship(models.Model):
 
 class CharacterWeaponRank(models.Model):
     weapon = models.ForeignKey(Weapon, on_delete = models.CASCADE)
-    base_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE)
+    base_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE,verbose_name="character base rank for weapon")
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
 
 class CharacterStat(models.Model):
