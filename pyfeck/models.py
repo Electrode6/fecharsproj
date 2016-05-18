@@ -1,7 +1,32 @@
 from django.db import models
 
+class StatCategoryCharacter:
+    def __init__(self, stat_name,base,growth,cap_modifier):
+        self.statName=stat_name
+        self.base=base
+        self.growth=growth
+        self.capModifier=cap_modifier
+
+class StatCategoryManager(models.Manager):
+    def get_all_for_character(self, character_id):
+        characterStats = CharacterStat.objects.filter(character_id=character_id)
+        statCategoriesCharacter=[]
+        for statCategory in self.all():
+            growth_for_stat=0
+            base_for_stat=0
+            capModifier_for_stat=0
+            if characterStats.filter(stat_id=statCategory.pk).count()>0:
+                characterStat=characterStats.filter(stat_id=statCategory.pk).first()
+                growth_for_stat=characterStat.growth
+                base_for_stat=characterStat.base
+                capModifier_for_stat=characterStat.cap_modifier
+
+            statCategoriesCharacter.append(StatCategoryCharacter(statCategory.name,base_for_stat,growth_for_stat,capModifier_for_stat))
+        return statCategoriesCharacter
+
 class StatCategory(models.Model):
-    name = models.CharField(max_length = 20)
+    name = models.CharField(max_length = 20, verbose_name="stat")
+    objects=StatCategoryManager()
     class Meta:
         verbose_name = "Stat Category"
         verbose_name_plural = "Stat Categories"
@@ -15,8 +40,9 @@ class WeaponRank(models.Model):
         return self.name
 
 class Weapon(models.Model):
-    name = models.CharField(max_length = 20)
-    rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE, verbose_name="weapon rank")
+    name = models.CharField(max_length = 20, verbose_name="name")
+    rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE, verbose_name="rank")
+    image_static=models.CharField(max_length=256)
     def __str__(self):
         return self.name
 
@@ -114,15 +140,10 @@ class Character(models.Model):
     currentClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
     primaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="primary class", on_delete = models.CASCADE, related_name = "primary_Class_Category")
     secondaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="secondary class",on_delete = models.CASCADE, related_name = "secondary_Class_Category")
-    isCurrentClassPrimary = models.BooleanField()
+    # isCurrentClassPrimary = models.BooleanField()
     generationChoices = ((1, "Generation One"), (2, "Generation Two"), (3, "Generation Three"))
     generation = models.IntegerField(verbose_name="generation", choices = generationChoices, default = 1)
     image_static = models.CharField(max_length=255)
-
-    @property
-    def characterWeapons(self):
-        return CharacterWeaponRank.objects.filter(character_id=self.pk)
-
 
 class CharacterSupportLevelStatBonus(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
@@ -145,9 +166,10 @@ class CharacterWeaponRank(models.Model):
 class CharacterStat(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
     stat = models.ForeignKey(StatCategory, on_delete = models.CASCADE)
-    growth = models.IntegerField()
-    base = models.IntegerField()
-    cap_modifier = models.IntegerField()
+    growth = models.IntegerField(verbose_name="personal growth")
+    base = models.IntegerField( verbose_name="base")
+    cap_modifier = models.IntegerField(verbose_name="cap modifier")
+
 
 # TODO: Add character friendship classes, marriage classes
 # TODO: Add formula for child growths and stat cap modifiers and also bases and class sets from parents

@@ -1,0 +1,23 @@
+{% extends "pyfeck/base.html" %}
+
+{% block head_title %}
+{{ weapon.name}}
+{% endblock %}
+
+{% block content %}
+{% load verbose_names %}
+<div class="panel panel-default">
+<div class="panel-heading">
+    <div class="row">
+        <div class="col-md-3">
+<img src="{{weapon_image_static_path}}{{weapon.image_static}}" class="img-responsive" alt="{{weapon.name}}"/>
+<h1>{{ weapon.name}}</h1>
+            </div>
+        <div class="col-md-3">
+            <p>{% get_verbose_field_name weapon 'name' %}:{{weapon.name}}</p>
+<p>{% get_verbose_field_name weapon 'rank' %}:{{weapon.rank}}</p></div>
+</div>
+</div>
+    Probably adad links to all characters that are using this weapon.
+</div>
+{% endblock %}

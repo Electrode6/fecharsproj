@@ -5,12 +5,16 @@
     {%load staticfiles%}
     <link href="{% static 'bootstrap-3.3.6-dist/css/bootstrap.min.css'%}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{%static 'pyfeck/css/style.css'%}"/>
+    <script src="{% static 'jquery/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery-1.11.2.min.js' %}"></script>
+    <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.min.js'%}"></script>
     <title>{% block head_title %}{% endblock %}</title>
 
 </head>
 <body>
 <div class="container-fluid">
-{% static 'pyfeck/images/characters/' as image_static_path %}
+{% static 'pyfeck/images/characters/' as character_image_static_path %}
+{% static 'pyfeck/images/weapons/' as weapon_image_static_path %}
 {% block content %}{% endblock %}
 </div>
 </body>
