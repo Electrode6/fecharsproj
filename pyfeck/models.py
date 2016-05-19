@@ -41,7 +41,6 @@ class WeaponRank(models.Model):
 
 class Weapon(models.Model):
     name = models.CharField(max_length = 20, verbose_name="name")
-    rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE, verbose_name="rank")
     image_static=models.CharField(max_length=256)
     def __str__(self):
         return self.name
@@ -137,10 +136,8 @@ class Character(models.Model):
     baseLevel = models.IntegerField(verbose_name='base level')
     skillName = models.CharField(verbose_name="skill", max_length = 50)
     skillDescription = models.CharField(max_length = 500)
-    currentClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
-    primaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="primary class", on_delete = models.CASCADE, related_name = "primary_Class_Category")
-    secondaryClassCategory = models.ForeignKey(CharacterClassCategory, verbose_name="secondary class",on_delete = models.CASCADE, related_name = "secondary_Class_Category")
-    # isCurrentClassPrimary = models.BooleanField()
+    primaryClass = models.ForeignKey(CharacterClass, verbose_name="primary class", on_delete = models.CASCADE, related_name = "primary_Class")
+    secondaryClass = models.ForeignKey(CharacterClass, verbose_name="secondary class",on_delete = models.CASCADE, related_name = "secondary_Class")
     generationChoices = ((1, "Generation One"), (2, "Generation Two"), (3, "Generation Three"))
     generation = models.IntegerField(verbose_name="generation", choices = generationChoices, default = 1)
     image_static = models.CharField(max_length=255)

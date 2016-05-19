@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
-from pyfeck.models import  Character,Weapon, CharacterWeaponRank, StatCategory, CharacterStat
+from pyfeck.models import  Character,Weapon, CharacterWeaponRank, StatCategory, CharacterStat, CharacterClassWeapon
 
 from pyfeck.models import CharacterClassCategory
 
@@ -21,7 +21,17 @@ class CharacterView(generic.DetailView):
         return StatCategory.objects.get_all_for_character(character_id)
     def get_context_data(self, **kwargs):
         context=super(CharacterView,self).get_context_data(**kwargs)
-        context["characterWeapons"]=CharacterWeaponRank.objects.filter(character_id=self.kwargs["pk"])
+        context["selectedClassId"]=int(self.kwargs["cpk"])
+        # if self.model.objects.filter(character_id= self.kwargs["pk"],character_primaryClass__id=self.kwargs["cpk"]).count()==1:
+        #     context["primaryClassSelected"] ="checked"
+        #     context["secondaryClassSelected"]=""
+        # elif self.model.secondaryClass_id==self.kwargs["cpk"]:
+        #     context["primaryClassSelected"] =""
+        #     context["secondaryClassSelected"]="checked"
+        # else:
+        #     context["primaryClassSelected"] =""
+        #     context["secondaryClassSelected"]=""
+        context["classWeapons"]=CharacterClassWeapon.objects.filter(characterClass_id=self.kwargs["cpk"])
         context["statCategories"]=self.get_values(self.kwargs["pk"])
         context["statCategory"]=StatCategory.objects.first()
         context["characterStats"]=CharacterStat.objects.filter(character_id=self.kwargs["pk"])

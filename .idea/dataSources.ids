@@ -104,26 +104,22 @@
     </table>
     <table name="pyfeck_character" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR (20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="baseLevel" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="currentClass_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="gender_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="skillDescription" sqlType="VARCHAR (500)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="skillName" sqlType="VARCHAR (50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="isCurrentClassPrimary" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="primaryClassCategory_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="secondaryClassCategory_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="skillName" sqlType="VARCHAR(50)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="skillDescription" sqlType="VARCHAR(500)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="generation" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="image_static" sqlType="VARCHAR (255)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="image_static" sqlType="VARCHAR(255)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="gender_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="primaryClass_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="secondaryClass_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_pyfeck_character_1" columns="secondaryClassCategory_id" ref-table="pyfeck_characterclasscategory" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_pyfeck_character_2" columns="primaryClassCategory_id" ref-table="pyfeck_characterclasscategory" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_pyfeck_character_1" columns="secondaryClass_id" ref-table="pyfeck_characterclass" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_pyfeck_character_2" columns="primaryClass_id" ref-table="pyfeck_characterclass" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <foreign-key name="#FAKE_pyfeck_character_3" columns="gender_id" ref-table="pyfeck_sexcategory" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_pyfeck_character_4" columns="currentClass_id" ref-table="pyfeck_characterclass" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="pyfeck_character_96227241" unique="true" columns="secondaryClassCategory_id"/>
-      <index name="pyfeck_character_14895d4f" unique="true" columns="primaryClassCategory_id"/>
+      <index name="pyfeck_character_2ee54f1e" unique="true" columns="secondaryClass_id"/>
+      <index name="pyfeck_character_49374a3a" unique="true" columns="primaryClass_id"/>
       <index name="pyfeck_character_623af7fd" unique="true" columns="gender_id"/>
-      <index name="pyfeck_character_7436e473" unique="true" columns="currentClass_id"/>
     </table>
     <table name="pyfeck_characterclass" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
@@ -230,11 +226,11 @@
     </table>
     <table name="pyfeck_characterstat" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="growth" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="base" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="cap_modifier" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="character_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="stat_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="growth" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_pyfeck_characterstat_1" columns="stat_id" ref-table="pyfeck_statcategory" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <foreign-key name="#FAKE_pyfeck_characterstat_2" columns="character_id" ref-table="pyfeck_character" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
@@ -299,12 +295,9 @@
     </table>
     <table name="pyfeck_weapon" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR (20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="rank_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="image_static" sqlType="VARCHAR (256)" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR(20)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="image_static" sqlType="VARCHAR(256)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_pyfeck_weapon_1" columns="rank_id" ref-table="pyfeck_weaponrank" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="pyfeck_weapon_ed84088f" unique="true" columns="rank_id"/>
     </table>
     <table name="pyfeck_weaponrank" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>

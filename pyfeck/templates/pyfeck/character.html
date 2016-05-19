@@ -17,27 +17,37 @@
             <p>{% get_verbose_field_name character 'baseLevel' %} <span class="badge">{{character.baseLevel}}</span></p>
             <p>
 <div class="btn-group" data-toggle="buttons">
-  <label class="btn btn-primary active">
-    <input type="radio" name="options" id="primaryClass" autocomplete="on" checked>
-          {{character.primaryClassCategory.name}}<span class="badge">1</span>
-  </label>
-  <label class="btn btn-primary">
-    <input type="radio" name="options" id="secondaryClass" autocomplete="on">
-      {{character.secondaryClassCategory.name}}<span class="badge">2</span>
-  </label>
+      {% ifequal character.primaryClass.id selectedClassId %}
+        <label class="btn btn-primary active">
+            <input type="radio" name="options" id="primaryClass" autocomplete="on" checked>
+      {% else %}
+        <label class="btn btn-primary">
+      <input type="radio" name="options" id="primaryClass" autocomplete="on">
+      {% endifequal %}
+          {{character.primaryClass.category.name}}<span class="badge">1</span>
+        </label>
+      {% ifequal character.secondaryClass.id selectedClassId %}
+        <label class="btn btn-primary active">
+        <input type="radio" name="options" id="secondaryClass" autocomplete="on" checked>
+      {% else %}
+        <label class="btn btn-primary">
+        <input type="radio" name="options" id="secondaryClass" autocomplete="on">
+      {% endifequal %}
+      {{character.secondaryClass.category.name}}<span class="badge">2</span>
+    </label>
 </div>
 </p>
 <p>{{character.gender.name}}</p>
 <p><strong>{% get_verbose_field_name character 'skillName' %}:{{character.skillName}}</strong> &nbsp; {{character.skillDescription}}</p>
-{% if characterWeapons %}
+{% if classWeapons %}
   <a href="#" class="list-group-item active">
     <h4 class="list-group-item-heading">{{character.name}}'s Weapons</h4>
-    {% for characterWeapon in characterWeapons %}
+    {% for classWeapon in classWeapons %}
         <p class="list-group-item-text">
-        <a href="{% url 'pyfeck:weapon' characterWeapon.weapon.id %}">
-            <img src="{{weapon_image_static_path}}{{characterWeapon.weapon.image_static}}" alt="{{characterWeapon.weapon.name}}"/>
-        </a>Base Rank:
-        <span class="badge badge-default right-block">{{characterWeapon.base_weapon_rank.name}}</span>
+        <a href="{% url 'pyfeck:weapon' classWeapon.weapon.id %}">
+            <img src="{{weapon_image_static_path}}{{classWeapon.weapon.image_static}}" alt="{{classWeapon.weapon.name}}"/>
+        </a>Max Rank:
+        <span class="badge badge-default right-block">{{classWeapon.max_weapon_rank.name}}</span>
         </p>
     {% endfor %}
   </a>
