@@ -3,8 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from pyfeck.models import Weapon, WeaponRank, StatCategory, CharacterClassCategory, CharacterClassStat, \
     CharacterClass, CompoundStatCategory, CharacterClassCompoundStat, CharacterClassWeapon, CharacterClassPromotion, CharacterClassSkill, Character, \
-    SexCategory, CharacterStat, CharacterWeaponRank, SupportLevelAvailability, SupportLevel, \
-    CharacterSupportLevelStatBonus, CharacterRelationship
+    SexCategory, CharacterStat, SupportLevelAvailability, SupportLevel, \
+    CharacterSupportLevelStatBonus, CharacterRelationship, CharacterPrimaryClassWeapon
 
 
 class CharacterClassPromotion_Inline(admin.TabularInline):
@@ -52,10 +52,6 @@ class CharacterStat_Inline(admin.TabularInline):
     model = CharacterStat
     extra = 9
 
-class CharacterWeaponRank_Inline(admin.TabularInline):
-    model = CharacterWeaponRank
-    extra = 3
-
 class CharacterSupportLevelStatBonus_Inline(admin.TabularInline):
     model = CharacterSupportLevelStatBonus
     extra = 1
@@ -65,17 +61,23 @@ class CharacterRelationship_Inline(admin.TabularInline):
     extra = 1
     fk_name = "supportingCharacter"
 
-##class GenerationInline(admin.TabularInline):
-    ##model = generation
-    ##extra = 1
-
 class CharacterClassAdmin(admin.ModelAdmin):
     fieldsets = [("Generic", {"fields" : ["category", "tier"]})]
     inlines = [CharacterClassStat_Inline, CharacterClassCompoundStat_Inline, CharacterClassWeapon_Inline, CharacterClassPromotion_Inline, CharacterClassSkill_Inline]
 
+
+class CharacterPrimaryClassWeaponAdmin(admin.TabularInline):
+    list_display=("character","classWeapon","base_weapon_rank")
+    fields=("character","classWeapon", "base_weapon_rank")
+    model = CharacterPrimaryClassWeapon
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "classWeapon":
+            kwargs["queryset"] = CharacterClassWeapon.objects.order_by("characterClass")
+        return super(CharacterPrimaryClassWeaponAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 class CharacterAdmin(admin.ModelAdmin):
-    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClassCategory", "secondaryClassCategory", "isCurrentClassPrimary","generation"]})]
-    inlines = [CharacterStat_Inline, CharacterWeaponRank_Inline, CharacterSupportLevelStatBonus_Inline, CharacterRelationship_Inline]
+    fieldsets = [("Generic", {"fields" : ["name", "gender", "baseLevel", "skillName", "skillDescription", "primaryClass", "secondaryClass","generation"]})]
+    inlines = [CharacterPrimaryClassWeaponAdmin, CharacterStat_Inline, CharacterSupportLevelStatBonus_Inline, CharacterRelationship_Inline]
 
 class SupportLevelAvailability_Inline(admin.TabularInline):
     model = SupportLevelAvailability
@@ -89,6 +91,7 @@ class GenderAdmin(admin.TabularInline):
     model = SexCategory
     extra = 1
 
+# admin.site.register(CharacterPrimaryClassWeapon, CharacterPrimaryClassWeaponAdmin)
 admin.site.register(SupportLevel)
 admin.site.register(SupportLevelAvailability)
 admin.site.register(SexCategory)
@@ -99,3 +102,4 @@ admin.site.register(CharacterClassCategory)
 admin.site.register(StatCategory)
 admin.site.register(Weapon)
 admin.site.register(WeaponRank)
+

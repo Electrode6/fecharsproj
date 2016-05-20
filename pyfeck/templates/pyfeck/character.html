@@ -39,16 +39,19 @@
 </p>
 <p>{{character.gender.name}}</p>
 <p><strong>{% get_verbose_field_name character 'skillName' %}:{{character.skillName}}</strong> &nbsp; {{character.skillDescription}}</p>
-{% if classWeapons %}
+{% if characterWeapons %}
   <a href="#" class="list-group-item active">
     <h4 class="list-group-item-heading">{{character.name}}'s Weapons</h4>
-    {% for classWeapon in classWeapons %}
+    {% for characterWeapon in characterWeapons %}
         <p class="list-group-item-text">
-        <a href="{% url 'pyfeck:weapon' classWeapon.weapon.id %}">
-            <img src="{{weapon_image_static_path}}{{classWeapon.weapon.image_static}}" alt="{{classWeapon.weapon.name}}"/>
+        <a href="{% url 'pyfeck:weapon' characterWeapon.classWeapon.weapon.id %}">
+            <img src="{{weapon_image_static_path}}{{characterWeapon.classWeapon.weapon.image_static}}" alt="{{characterWeapon.classWeapon.weapon.name}}"/>
         </a>Max Rank:
-        <span class="badge badge-default right-block">{{classWeapon.max_weapon_rank.name}}</span>
+        <span class="badge badge-default right-block">{{characterWeapon.classWeapon.max_weapon_rank.name}}</span>
+        Base Rank:
+        <span class="badge badge-default right-block">{{characterWeapon.base_weapon_rank.name}}</span>
         </p>
+
     {% endfor %}
   </a>
 {% else %}

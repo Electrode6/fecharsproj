@@ -208,6 +208,19 @@
       <index name="pyfeck_characterclassweapon_ea647352" unique="true" columns="weapon_id"/>
       <index name="pyfeck_characterclassweapon_230e6ba5" unique="true" columns="characterClass_id"/>
     </table>
+    <table name="pyfeck_characterprimaryclassweapon" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="base_weapon_rank_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="character_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="classWeapon_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <foreign-key name="#FAKE_pyfeck_characterprimaryclassweapon_1" columns="classWeapon_id" ref-table="pyfeck_characterclassweapon" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_pyfeck_characterprimaryclassweapon_2" columns="character_id" ref-table="pyfeck_character" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_pyfeck_characterprimaryclassweapon_3" columns="base_weapon_rank_id" ref-table="pyfeck_weaponrank" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="pyfeck_characterprimaryclassweapon_46524be9" unique="true" columns="classWeapon_id"/>
+      <index name="pyfeck_characterprimaryclassweapon_bf21153f" unique="true" columns="character_id"/>
+      <index name="pyfeck_characterprimaryclassweapon_601aa115" unique="true" columns="base_weapon_rank_id"/>
+    </table>
     <table name="pyfeck_characterrelationship" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="dependentCharacter_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
@@ -251,19 +264,6 @@
       <index name="pyfeck_charactersupportlevelstatbonus_236e770a" unique="true" columns="supportLevel_id"/>
       <index name="pyfeck_charactersupportlevelstatbonus_3a45c83f" unique="true" columns="stat_id"/>
       <index name="pyfeck_charactersupportlevelstatbonus_bf21153f" unique="true" columns="character_id"/>
-    </table>
-    <table name="pyfeck_characterweaponrank" schema="" catalog="" type="TABLE">
-      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="base_weapon_rank_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="character_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="weapon_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <primary-key columns="id"/>
-      <foreign-key name="#FAKE_pyfeck_characterweaponrank_1" columns="weapon_id" ref-table="pyfeck_weapon" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_pyfeck_characterweaponrank_2" columns="character_id" ref-table="pyfeck_character" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_pyfeck_characterweaponrank_3" columns="base_weapon_rank_id" ref-table="pyfeck_weaponrank" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="pyfeck_characterweaponrank_ea647352" unique="true" columns="weapon_id"/>
-      <index name="pyfeck_characterweaponrank_bf21153f" unique="true" columns="character_id"/>
-      <index name="pyfeck_characterweaponrank_601aa115" unique="true" columns="base_weapon_rank_id"/>
     </table>
     <table name="pyfeck_compoundstatcategory" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>

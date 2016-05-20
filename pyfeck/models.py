@@ -96,6 +96,9 @@ class CharacterClassWeapon(models.Model):
     max_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE)
     characterClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
 
+    def __str__(self):
+        return self.characterClass.category.name + " - " + self.weapon.name
+
 class CharacterClassBonuses(models.Model):
     characterClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
     # stat = models.ForeignKey(Stat, on_delete = models.CASCADE)
@@ -142,6 +145,9 @@ class Character(models.Model):
     generation = models.IntegerField(verbose_name="generation", choices = generationChoices, default = 1)
     image_static = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class CharacterSupportLevelStatBonus(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
     supportLevel = models.ForeignKey(SupportLevel, on_delete = models.CASCADE)
@@ -155,10 +161,10 @@ class CharacterRelationship(models.Model):
     supportLevel = models.ForeignKey(SupportLevel, on_delete = models.CASCADE)
     dependentCharacter = models.ForeignKey(Character, on_delete = models.CASCADE, related_name = "dependent_Character")
 
-class CharacterWeaponRank(models.Model):
-    weapon = models.ForeignKey(Weapon, on_delete = models.CASCADE)
+class CharacterPrimaryClassWeapon(models.Model):
+    classWeapon=models.ForeignKey(CharacterClassWeapon)
     base_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE,verbose_name="character base rank for weapon")
-    character = models.ForeignKey(Character, on_delete = models.CASCADE)
+    character=models.ForeignKey(Character)
 
 class CharacterStat(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
