@@ -9,7 +9,7 @@
     <script src="{% static 'jquery/jquery-1.11.2.min.js' %}"></script>
     <script src="{% static 'bootstrap-3.3.6-dist/js/bootstrap.min.js'%}"></script>
     <title>{% block head_title %}{% endblock %}</title>
-
+    {% block page_specific %} {% endblock %}
 </head>
 <body>
 <div class="container-fluid">
@@ -17,5 +17,6 @@
 {% static 'pyfeck/images/weapons/' as weapon_image_static_path %}
 {% block content %}{% endblock %}
 </div>
+{% block footer %} {% endblock %}
 </body>
 </html>

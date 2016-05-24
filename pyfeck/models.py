@@ -1,29 +1,42 @@
 from django.db import models
 
 class StatCategoryCharacter:
-    def __init__(self, stat_name,base,growth,cap_modifier):
+    def __init__(self, stat_name, base, character_growth, character_cap_modifier,class_growth,class_cap,guardStanceBonus):
         self.statName=stat_name
         self.base=base
-        self.growth=growth
-        self.capModifier=cap_modifier
+        self.character_growth=character_growth
+        self.character_capModifier=character_cap_modifier
+        self.class_growth=class_growth
+        self.class_cap=class_cap
+        self.guardStanceBonus=guardStanceBonus
 
 class StatCategoryManager(models.Manager):
-    def get_all_for_character(self, character_id):
+    def get_all_for_character_and_class(self, character_id, class_id):
         characterStats = CharacterStat.objects.filter(character_id=character_id)
+        classStats=CharacterClassStat.objects.filter(characterClass_id=class_id)
         statCategoriesCharacter=[]
         for statCategory in self.all():
-            growth_for_stat=0
-            base_for_stat=0
-            capModifier_for_stat=0
+            character_growth_for_stat=0
+            character_base_for_stat=0
+            character_capModifier_for_stat=0
+            class_growth = 0
+            class_cap = 0
+            class_guardStanceBonus = 0
+
             if characterStats.filter(stat_id=statCategory.pk).count()>0:
                 characterStat=characterStats.filter(stat_id=statCategory.pk).first()
-                growth_for_stat=characterStat.growth
-                base_for_stat=characterStat.base
-                capModifier_for_stat=characterStat.cap_modifier
-
-            statCategoriesCharacter.append(StatCategoryCharacter(statCategory.name,base_for_stat,growth_for_stat,capModifier_for_stat))
+                character_growth_for_stat=characterStat.growth
+                character_base_for_stat=characterStat.base
+                character_capModifier_for_stat=characterStat.cap_modifier
+            if classStats.filter(stat_id=statCategory.pk).count()>0:
+                classStat=classStats.filter(stat_id=statCategory.pk).first()
+                class_growth=classStat.growth
+                class_cap=classStat.cap
+                class_guardStanceBonus=classStat.guardStanceBonus
+            statCategoriesCharacter.append(StatCategoryCharacter(statCategory.name,character_base_for_stat,character_growth_for_stat,character_capModifier_for_stat,class_growth,class_cap,class_guardStanceBonus))
         return statCategoriesCharacter
 
+#presented through UI
 class StatCategory(models.Model):
     name = models.CharField(max_length = 20, verbose_name="stat")
     objects=StatCategoryManager()
@@ -33,18 +46,21 @@ class StatCategory(models.Model):
     def __str__(self):
         return self.name
 
+#presented through UI
 class WeaponRank(models.Model):
     name = models.CharField(max_length = 1)
     order = models.IntegerField()
     def __str__(self):
         return self.name
 
+#presented through UI
 class Weapon(models.Model):
     name = models.CharField(max_length = 20, verbose_name="name")
     image_static=models.CharField(max_length=256)
     def __str__(self):
         return self.name
 
+#presented through UI
 class CharacterClassCategory(models.Model):
     name = models.CharField(verbose_name="class name", max_length = 20)
     class Meta:
@@ -78,12 +94,13 @@ class CharacterClassCompoundStat(models.Model):
     compoundStatCategory = models.ForeignKey(CompoundStatCategory, on_delete = models.CASCADE)
     bonus = models.IntegerField()
 
+#presented through UI
 class CharacterClassStat(models.Model):
     characterClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
     stat = models.ForeignKey(StatCategory, on_delete = models.CASCADE)
-    growth = models.IntegerField()
-    cap = models.IntegerField()
-    guardStanceBonus = models.IntegerField()
+    growth = models.IntegerField(verbose_name="growth")
+    cap = models.IntegerField(verbose_name="cap")
+    guardStanceBonus = models.IntegerField(verbose_name="guard stance bonus")
     def __str__(self):
         return self.characterClass.category.name + " - " + self.stat.name
 
@@ -91,6 +108,7 @@ class CharacterClassPromotion(models.Model):
     fromClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE, related_name = "from_class")
     toClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE, related_name = "to_class")
 
+#presented through UI
 class CharacterClassWeapon(models.Model):
     weapon = models.ForeignKey(Weapon, on_delete = models.CASCADE)
     max_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE)
@@ -103,6 +121,7 @@ class CharacterClassBonuses(models.Model):
     characterClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
     # stat = models.ForeignKey(Stat, on_delete = models.CASCADE)
 
+#Presented through UI
 class CharacterClassSkill(models.Model):
     name = models.CharField(max_length = 50)
     characterClass = models.ForeignKey(CharacterClass, on_delete = models.CASCADE)
@@ -125,6 +144,7 @@ class SupportLevel(models.Model):
     def __str__(self):
         return self.name
 
+#presented through UI
 class SexCategory(models.Model):
     name = models.CharField(verbose_name="sex",max_length = 10)
     class Meta:
@@ -133,11 +153,13 @@ class SexCategory(models.Model):
     def __str__(self):
         return self.name
 
+#presented through UI
 class Character(models.Model):
     name = models.CharField(max_length = 20)
     gender = models.ForeignKey(SexCategory, on_delete = models.CASCADE)
     baseLevel = models.IntegerField(verbose_name='base level')
-    skillName = models.CharField(verbose_name="skill", max_length = 50)
+    maxLevel=models.IntegerField(verbose_name='max level')
+    skillName = models.CharField(verbose_name="character skill", max_length = 50)
     skillDescription = models.CharField(max_length = 500)
     primaryClass = models.ForeignKey(CharacterClass, verbose_name="primary class", on_delete = models.CASCADE, related_name = "primary_Class")
     secondaryClass = models.ForeignKey(CharacterClass, verbose_name="secondary class",on_delete = models.CASCADE, related_name = "secondary_Class")
@@ -161,11 +183,13 @@ class CharacterRelationship(models.Model):
     supportLevel = models.ForeignKey(SupportLevel, on_delete = models.CASCADE)
     dependentCharacter = models.ForeignKey(Character, on_delete = models.CASCADE, related_name = "dependent_Character")
 
+#presented through UI
 class CharacterPrimaryClassWeapon(models.Model):
     classWeapon=models.ForeignKey(CharacterClassWeapon)
     base_weapon_rank = models.ForeignKey(WeaponRank, on_delete = models.CASCADE,verbose_name="character base rank for weapon")
     character=models.ForeignKey(Character)
 
+#presented through UI
 class CharacterStat(models.Model):
     character = models.ForeignKey(Character, on_delete = models.CASCADE)
     stat = models.ForeignKey(StatCategory, on_delete = models.CASCADE)

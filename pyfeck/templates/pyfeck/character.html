@@ -3,7 +3,12 @@
 {% block head_title %}
 {{ character.name}}
 {% endblock %}
-
+{% block page_specific %}
+        {%load staticfiles%}
+    <link rel="stylesheet" type="text/css" href="{%static 'slider/css/bootstrap-slider.min.css'%}"/>
+    <script src="{% static 'slider/js/bootstrap-slider.js' %}"></script>
+<script src="{% static 'pyfeck/js/character.js'%}"></script>
+{% endblock %}
 {% block content %}
 {% load verbose_names %}
 <div class="panel panel-default">
@@ -12,33 +17,39 @@
         <div class="col-md-3">
 <img src="{{character_image_static_path}}{{character.image_static}}" class="img-responsive" alt="{{character.name}}"/>
 <h1>{{ character.name}} <small>{{character.get_generation_display}}</small></h1>
+<p>{{character.gender.name}}</p>
+            <p><input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="{{ character.baseLevel }}" data-slider-max="{{ character.maxLevel }}" data-slider-step="1" data-slider-value="{{ selectedLevel }}"/></p>
             </div>
-        <div class="col-md-4">
-            <p>{% get_verbose_field_name character 'baseLevel' %} <span class="badge">{{character.baseLevel}}</span></p>
-            <p>
+        <div class="col-md-6">
 <div class="btn-group" data-toggle="buttons">
       {% ifequal character.primaryClass.id selectedClassId %}
-        <label class="btn btn-primary active">
-            <input type="radio" name="options" id="primaryClass" autocomplete="on" checked>
+        <label class="btn btn-primary active" id="primaryClass_l">
+            <input type="radio" name="options" id="op_primaryClass" autocomplete="off" value="{% url 'pyfeck:character' character.id character.primaryClass.id selectedLevel%}" checked>
       {% else %}
-        <label class="btn btn-primary">
-      <input type="radio" name="options" id="primaryClass" autocomplete="on">
+        <label class="btn btn-primary"  id="primaryClass_l">
+      <input type="radio" name="options" id="op_primaryClass" autocomplete="off"  value="{% url 'pyfeck:character' character.id character.primaryClass.id selectedLevel%}">
       {% endifequal %}
           {{character.primaryClass.category.name}}<span class="badge">1</span>
         </label>
       {% ifequal character.secondaryClass.id selectedClassId %}
-        <label class="btn btn-primary active">
-        <input type="radio" name="options" id="secondaryClass" autocomplete="on" checked>
+        <label class="btn btn-primary active"  id="secondaryClass_l">
+        <input type="radio" name="options" id="op_secondaryClass" autocomplete="off"  value="{% url 'pyfeck:character' character.id character.secondaryClass.id selectedLevel%}" checked>
       {% else %}
-        <label class="btn btn-primary">
-        <input type="radio" name="options" id="secondaryClass" autocomplete="on">
+        <label class="btn btn-primary" id="secondaryClass_l">
+        <input type="radio" name="options" id="op_secondaryClass" autocomplete="off" value="{% url 'pyfeck:character' character.id character.secondaryClass.id selectedLevel%}">
       {% endifequal %}
       {{character.secondaryClass.category.name}}<span class="badge">2</span>
     </label>
 </div>
 </p>
-<p>{{character.gender.name}}</p>
 <p><strong>{% get_verbose_field_name character 'skillName' %}:{{character.skillName}}</strong> &nbsp; {{character.skillDescription}}</p>
+{% if classSkills %}
+
+    {% for classSkill in classSkills %}
+        <p><strong>Class Skill:{{classSkill.name}}</strong> &nbsp; {{classSkill.description}} Minimum Level: {{classSkill.minLevel}}</p>
+
+    {% endfor %}
+{% endif %}
 {% if characterWeapons %}
   <a href="#" class="list-group-item active">
     <h4 class="list-group-item-heading">{{character.name}}'s Weapons</h4>
@@ -62,14 +73,21 @@
         </div>
 </div>
 </div>
-{%if characterStats%}
+{%if statCategories%}
             <table class="table">
                 <thead>
                     <tr>
-                    <td class="active"><h4>{% get_verbose_field_name statCategory "name" %}</h4></td>
+                    <td class="active" rowspan="2"><h4>{% get_verbose_field_name statCategory "name" %}</h4></td>
+                    <td class="active" colspan="3"><h4>From Character</h4></td>
+                    <td class="active" colspan="3"><h4>From Class</h4></td>
+                    </tr>
+                    <tr>
                     <td class="active"><h4>{% get_verbose_field_name characterStat "base" %}</h4></td>
                     <td class="active"><h4>{% get_verbose_field_name characterStat "growth" %}</h4></td>
                     <td class="active"><h4>{% get_verbose_field_name characterStat "cap_modifier" %}</h4></td>
+                    <td class="active"><h4>{% get_verbose_field_name classStat "growth" %}</h4></td>
+                    <td class="active"><h4>{% get_verbose_field_name classStat "cap" %}</h4></td>
+                    <td class="active"><h4>{% get_verbose_field_name classStat "guardStanceBonus" %}</h4></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,8 +95,11 @@
                     <tr>
                         <td>{{statCategory.statName}}</td>
                         <td>{{statCategory.base}}</td>
-                        <td>{{statCategory.growth}}</td>
-                        <td>{{statCategory.capModifier}}</td>
+                        <td>{{statCategory.character_growth}}</td>
+                        <td>{{statCategory.character_capModifier}}</td>
+                        <td>{{statCategory.class_growth}}</td>
+                        <td>{{statCategory.class_cap}}</td>
+                        <td>{{statCategory.guardStanceBonus}}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -87,4 +108,15 @@
 <p>No stats for this character.</p>
 {%endif %}
 </div>
+{% endblock %}
+
+{% block footer %}
+<script type="application/javascript">
+
+$(document).on('slideStop','#ex8', function(evtStop){
+    characterUrl="{% url 'pyfeck:character' character.id character.primaryClass.id 9999%}";
+    window.location.replace(characterUrl.replace("9999",evtStop.value));
+
+})
+</script>
 {% endblock %}
