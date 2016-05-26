@@ -14,31 +14,35 @@
 <div class="panel panel-default">
 <div class="panel-heading">
     <div class="row">
-        <div class="col-md-3">
-<img src="{{character_image_static_path}}{{character.image_static}}" class="img-responsive" alt="{{character.name}}"/>
-<h1>{{ character.name}} <small>{{character.get_generation_display}}</small></h1>
-<p>{{character.gender.name}}</p>
+        <div class="col-md-2">
+            <img src="{{character_image_static_path}}{{character.image_static}}" class="img-responsive img-circle" alt="{{character.name}}"/>
+        </div>
+        <div class="col-md-4">
+            <h3>{{ character.name}} <small>{{character.get_generation_display}}</small></h3>
+            <p>{{character.gender.name}}</p>
+            <p>{% get_verbose_field_name character 'baseLevel' %} &nbsp; <span class="badge badge-default">{{ character.baseLevel }}</span></p>
+            <p  class="deep-space">Current Level:</p>
             <p><input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="{{ character.baseLevel }}" data-slider-max="{{ character.maxLevel }}" data-slider-step="1" data-slider-value="{{ selectedLevel }}"/></p>
-            </div>
+        </div>
         <div class="col-md-6">
 <div class="btn-group" data-toggle="buttons">
       {% ifequal character.primaryClass.id selectedClassId %}
         <label class="btn btn-primary active" id="primaryClass_l">
-            <input type="radio" name="options" id="op_primaryClass" autocomplete="off" value="{% url 'pyfeck:character' character.id character.primaryClass.id selectedLevel%}" checked>
+            <input type="radio" name="options" id="op_Class_primary" autocomplete="off" value="{{ character.primaryClass.id }}" checked>
       {% else %}
         <label class="btn btn-primary"  id="primaryClass_l">
-      <input type="radio" name="options" id="op_primaryClass" autocomplete="off"  value="{% url 'pyfeck:character' character.id character.primaryClass.id selectedLevel%}">
+      <input type="radio" name="options" id="op_Class_primary" autocomplete="off"  value="{{ character.primaryClass.id }}">
       {% endifequal %}
-          {{character.primaryClass.category.name}}<span class="badge">1</span>
+          {{character.primaryClass.category.name}}&nbsp;<span class="badge badge-default">{{ character.primaryClass.tier }}</span>&nbsp;<span class="label label-warning">Primary</span>
         </label>
       {% ifequal character.secondaryClass.id selectedClassId %}
         <label class="btn btn-primary active"  id="secondaryClass_l">
-        <input type="radio" name="options" id="op_secondaryClass" autocomplete="off"  value="{% url 'pyfeck:character' character.id character.secondaryClass.id selectedLevel%}" checked>
+        <input type="radio" name="options" id="op_Class_secondary" autocomplete="off"  value="{{ character.secondaryClass.id }}" checked>
       {% else %}
         <label class="btn btn-primary" id="secondaryClass_l">
-        <input type="radio" name="options" id="op_secondaryClass" autocomplete="off" value="{% url 'pyfeck:character' character.id character.secondaryClass.id selectedLevel%}">
+        <input type="radio" name="options" id="op_Class_secondary" autocomplete="off" value="{{ character.secondaryClass.id }}">
       {% endifequal %}
-      {{character.secondaryClass.category.name}}<span class="badge">2</span>
+      {{character.secondaryClass.category.name}}&nbsp;<span class="badge badge-default">{{ character.secondaryClass.tier }}</span>&nbsp;<span class="label label-default">Secondary</span>
     </label>
 </div>
 </p>
@@ -114,9 +118,20 @@
 <script type="application/javascript">
 
 $(document).on('slideStop','#ex8', function(evtStop){
-    characterUrl="{% url 'pyfeck:character' character.id character.primaryClass.id 9999%}";
-    window.location.replace(characterUrl.replace("9999",evtStop.value));
-
+    characterUrl="{% url 'pyfeck:character' character.id character.primaryClass.id 9999%}".replace("9999",evtStop.value);
+    navigateToUrl(characterUrl, evtStop.target,"myModalBody");
 })
+
+$(document).on('click','#secondaryClass_l', function(event){
+    characterUrl="{% url 'pyfeck:character' character.id 9999 selectedLevel%}".replace("9999",$("#op_Class_secondary").val());
+    navigateToUrl(characterUrl, window.document.getElementById("op_Class_secondary"),"myModalBody");
+})
+
+$(document).on('click','#primaryClass_l', function(event){
+
+    characterUrl="{% url 'pyfeck:character' character.id 9999 selectedLevel%}".replace("9999",$("#op_Class_primary").val());
+    navigateToUrl(characterUrl, window.document.getElementById("op_Class_primary"),"myModalBody");
+})
+
 </script>
 {% endblock %}

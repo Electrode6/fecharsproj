@@ -12,9 +12,9 @@ All Characters
     {% for character in all_characters %}
         <li>
             <div class="thumbnail">
-            <img src="{{character_image_static_path}}{{character.image_static}}" class="img-responsive", alt="{{character.name}}"/>
+            <img src="{{character_image_static_path}}{{character.image_static}}" class="img-responsive img-circle", alt="{{character.name}}"/>
                 <div class="caption">
-                    <h3><a href="{% url 'pyfeck:character' character.id character.primaryClass.id character.baseLevel%}">{{ character.name }}</a></h3>
+                    <h3><a href="javascript: getCharacter({{ character.id }},{{ character.primaryClass.id }},{{ character.baseLevel }},'{{ character.name }}')">{{ character.name }}</a></h3>
                     <p>{{character.gender.name}} <a href="{% url 'pyfeck:class' character.primaryClass.id %}">{{character.primaryClass.category.name}}</a></p>
                 </div>
             </div>
@@ -24,4 +24,34 @@ All Characters
 {% else %}
     <p>No characters are available.</p>
 {% endif %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+          Loading ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+    <script type="application/javascript">
+    function getCharacter(characterid, classId, level, characterName){
+        characterUrl="character/"+characterid+"/"+classId+"/"+level+"/";
+        $('#myModalLabel').html("Details for character " + characterName);
+        $('#myModal').modal('show');
+        $.get( characterUrl, function( data ) {
+            $( "#myModalBody" ).html( data );
+        });
+    }
+    </script>
 {% endblock %}
